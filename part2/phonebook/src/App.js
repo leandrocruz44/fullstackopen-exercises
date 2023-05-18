@@ -29,11 +29,6 @@ const App = () => {
     const newContact = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1
-    }
-
-    if (newContact.name === '') {
-      return alert('The "Name" field cannot be empty')
     }
 
     // Update existing contact number, block duplicates or add new person
@@ -44,7 +39,7 @@ const App = () => {
         entryHandlers
           .update(duplicate.id, changedPerson)
           .then(returnedPersons => {
-            setPersons(persons.map(person => person.id != duplicate.id ? person : returnedPersons))
+            setPersons(persons.map(person => person.id !== duplicate.id ? person : returnedPersons))
             setNewName('')
             setNewNumber('')
             setNotification(`Information of ${changedPerson.name} was updated`)
@@ -64,6 +59,14 @@ const App = () => {
           setNewNumber('')
           setNotification(`${newContact.name} was added`)
           setTimeout(() => {
+            setNotification('')
+          }, 3000);
+        })
+        .catch(error => {
+          setError(true)
+          setNotification(`${error.response.data}`)
+          setTimeout(() => {
+            setError(false)
             setNotification('')
           }, 3000);
         })
@@ -98,20 +101,20 @@ const App = () => {
 
   const deletePerson = (e) => {
     const idValue = e.target.value
-    const selected = persons.find(person => person.id == idValue)
+    const selected = persons.find(person => person.id === idValue)
     if (window.confirm(`Do you want to delete ${selected.name} from the list?`)) {
       entryHandlers
       .deleteEntry(selected.id)
       .catch(err => {
         setError(true)
         setNotification(`Information of ${selected.name} has already been removed from server`)
-        setPersons(persons.filter(person => person.id != selected.id))
+        setPersons(persons.filter(person => person.id !== selected.id))
         setTimeout(() => {
           setNotification('')
           setError(false)
         }, 5000);
       })
-      setPersons(persons.filter(person => person.id != selected.id))
+      setPersons(persons.filter(person => person.id !== selected.id))
       setNotification(`${selected.name} was deleted`)
       setTimeout(() => {
         setNotification('')

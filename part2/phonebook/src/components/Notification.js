@@ -26,7 +26,7 @@ const Notification = ({ message, error }) => {
     const change = (m, e) => {
         if (m !== '' && e === false) {
             return success
-        } else if(m !== '' && e === true) {
+        } else if (m !== '' && e === true) {
             return failure
         } else {
             return none
